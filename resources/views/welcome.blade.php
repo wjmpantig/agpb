@@ -13,7 +13,13 @@
     </head>
     <body >
         <div id="app">
-            <h1>Hello, world!</h1>
+            <section class="hero is-dark is-fullheight">
+                <div class="hero-body">
+                    <div class="container">
+                        <h1 class="title">Hello world!</h1>
+                    </div>
+                </div>
+            </section>
 
         </div>
       
