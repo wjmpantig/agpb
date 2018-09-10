@@ -14,3 +14,10 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/generate','MediaController@generate')->name('generate');
+Route::get('/gallery', 'MediaController@get')->name('gallery');
+Route::get('/profiles', 'ProfileController@get')->name('profiles');

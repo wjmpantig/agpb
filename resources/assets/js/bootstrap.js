@@ -12,9 +12,6 @@ try {
     // window.$ = window.jQuery = require('jquery');
 
     // require('jquery');
-    // require('what-input')
-    // require('foundation-sites')
-    // $(document).foundation();
 } catch (e) {}
 
 /**
