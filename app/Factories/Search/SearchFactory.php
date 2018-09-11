@@ -15,13 +15,17 @@ class SearchFactory{
 		$this->implementations[] = $instance;
 		return $this;
 	}
-	public function do($name){
+	public function do($name,$index = null){
 		// Log::debug($this->implementations);
 		if(empty($this->implementations)){
 			throw new \Exception('No implementations for search');
 		}
+		// Log::debug("index search $index");
 		$i = $this->implementations;
-		return $i[$this->faker->numberBetween(0,count($i)-1)]->do($name);
+		$index = is_null($index) ? $this->faker->numberBetween(0,count($i)-1) : $index;
+		// Log::debug("index search $index");
 
+		return $i[$index]->do($name);
 	}
+	
 }

@@ -23,29 +23,28 @@ class MediaController extends Controller
     	
 		$faker = Factory::create();
 		$profile = Profile::with('altNames')->inRandomOrder()->first();
+		
 		$q = $profile->name;
 		if($faker->boolean){
 			$altname = $profile->altNames->random();
 			$q = $altname->name;
 		}
+		// $q = "arimura kasumi";//for debug
+		// $result = $this->searchFactory->do($q,0);
+		// return response()->json($result);
 		$result = $this->searchFactory->do($q);
 		if(!$result){
 			return null;
 		}
-		$media = new Media();
+		$media = new Media($result);
 		$media->profile_id = $profile->id;
-		$media->type = $result->type;
-		$media->description = $result->description;
-		
-		// $file = $this->fetchFile($resultMedia->media_url);
 		// $media->filename = Storage::putFile('public/photos',$file);
-		$media->filename = $result->media_url;
-		$media->url = $result->url;
-		if($media->type=='video'){
-			$media->video = $result->video_url;
+		// $media->filename = $result->media_url;
+		
+		
 			// $file = $this->fetchFile($video->url);
 			// $media->video = Storage::putFile('public/videos',$file);
-		}
+		
 		$media->save();
 		return $media;
     }

@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Factories\Search\SearchFactory;
 use App\Factories\Search\SearchTwitter;
+use App\Factories\Search\SearchGoogle;
 class SearchServiceProvider extends ServiceProvider
 {
     /**
@@ -21,8 +22,13 @@ class SearchServiceProvider extends ServiceProvider
             'consumer_key' =>  env('TWITTER_CONSUMER_KEY',null),
             'consumer_secret' =>  env('TWITTER_CONSUMER_KEY_SECRET',null)
         );
+        $google = [
+            'key'=>env('GOOGLE_CS_API_KEY',null),
+            'cx'=>env('GOOGLE_CX',null)
+        ];
         $this->app->make(SearchFactory::class)
-            ->register(new SearchTwitter($twitter_keys));
+            ->register(new SearchTwitter($twitter_keys))
+            ->register(new SearchGoogle($google));
     }
 
     /**

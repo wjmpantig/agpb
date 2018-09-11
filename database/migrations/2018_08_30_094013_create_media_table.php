@@ -16,12 +16,13 @@ class CreateMediaTable extends Migration
         Schema::create('media', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedBigInteger('profile_id');
-            $table->string('type');
-            $table->string('filename');
-            $table->string('title')->nullable();
-            $table->string('description')->nullable();
+            $table->string('type',20);
+            $table->string('filename',500);
+            $table->string('title',100)->nullable();
+            $table->string('description',200)->nullable();
             $table->string('video')->nullable();
-            $table->string('url');
+            $table->string('url',500);
+            $table->string('source');
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('profile_id')->references('id')->on('profiles');
