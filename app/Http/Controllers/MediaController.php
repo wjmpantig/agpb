@@ -63,6 +63,14 @@ class MediaController extends Controller
     		$media = Media::orderBy('created_at','desc')->paginate(15);
     		return view('gallery',['media'=>$media]);
     	}
+    	$media = Media::findOrFail($request->id);
+    	return view('media',['media'=>$media]);
+    }
+
+    public function delete(Request $request){
+    	$request->validate([
+    		'id'=>'exists:media,id'
+    	]);
     }
 
 }

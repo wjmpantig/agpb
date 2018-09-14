@@ -23,6 +23,7 @@ class CreateMediaTable extends Migration
             $table->string('video')->nullable();
             $table->string('url',500);
             $table->string('source');
+            $table->string('query',200);
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('profile_id')->references('id')->on('profiles');

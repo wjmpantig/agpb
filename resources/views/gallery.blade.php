@@ -6,7 +6,7 @@
     <div class="columns is-mobile is-multiline">
         @foreach($media as $m)
         <div class="column is-half-mobile is-one-third-tablet is-one-fifth-desktop">
-            <a href="{{route('gallery')}}">
+            <a href="{{route('media',['id'=>$m->id])}}">
                 
                 <div class="card">
                     <div class="card-image">
@@ -16,7 +16,7 @@
                     </div>
 
                     <div class="card-content is-size-7">
-                        {{$m->description}}
+                        {{$m->id}} : {{$m->description}}
                     </div>
                 </div>
             </a>

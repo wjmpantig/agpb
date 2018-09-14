@@ -18,6 +18,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/privacy-policy', 'PublicController@privacy')->name('privacy');
 Route::get('/generate','MediaController@generate')->name('generate');
 Route::get('/gallery', 'MediaController@get')->name('gallery');
+Route::get('/gallery/view/{id}', 'MediaController@get')->name('media');
 Route::get('/profiles', 'ProfileController@get')->name('profiles');

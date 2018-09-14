@@ -8,7 +8,7 @@ class SearchGoogle implements SearchInterface{
 	private $faker;
 	private static $URL = "https://www.googleapis.com/customsearch/v1";
 	private static $MAX_RESULTS = 100;
-	private static $NAME = 'google';
+	public static $NAME = 'google';
 	function __construct($settings){
 		$this->settings = $settings;
 		$this->faker = Factory::create();
@@ -16,8 +16,8 @@ class SearchGoogle implements SearchInterface{
 
 	public function do($name){
 		$options = [
-				'imgSize' => 'large',
 				'q'=>$name,
+				'imgSize' => 'large',
 				'searchType'=>'image',
 				'safe'=>'active'
 			];
@@ -35,15 +35,23 @@ class SearchGoogle implements SearchInterface{
 		//search single result on specific index
 		$options['num'] = 1;
 		$options['start'] = $index;
-		$result = $this->search($options)->items[0];
+		$result = $this->search($options);
+		if(isset($result->items)){
+			$result= $result->items[0];
+		}else{
+			return null;
+		}
 		// return dd($result);
+		// dd(http_build_query($options,'','&'));
+
 		$finalResult = [
 			'title'=>mb_strimwidth($result->title,0,100,'...'),
 			'description'=>mb_strimwidth($result->snippet,0,200,"..."),
 			'filename'=>$result->link,
 			'type'=>'photo',
 			'url'=>$result->image->contextLink,
-			'source'=>self::$NAME
+			'source'=>self::$NAME,
+			'query'=>http_build_query($options,'','&')
 		];
 		return $finalResult;
 	}

@@ -9,7 +9,7 @@ class ProfileController extends Controller
     public function get(Request $request){
     	
     	if(!isset($request->slug)){
-    		$profiles = Profile::all();
+    		$profiles = Profile::with('media')->get();
     		return view('profiles',['profiles'=>$profiles]);
     	}
     	$profile = Profile::where('slug',$request->slug)->first();

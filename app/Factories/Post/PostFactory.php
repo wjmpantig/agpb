@@ -1,18 +1,18 @@
 <?php
-namespace App\Factories\Search;
+namespace App\Factories\Post;
 use Faker\Factory;
 use Log;
-interface SearchInterface{
-	public function do($name);
+interface PostInterface{
+	public function do($media);
 }
-class SearchFactory{
+class PostFactory{
 	private $implementations;
 	private $faker;
 	function __construct(){
 		$this->implementations = collect([]);
 		$this->faker = Factory::create();
 	}
-	public function register(SearchInterface $instance){
+	public function register(PostInterface $instance){
 		$this->implementations->put($instance::$NAME,$instance);
 		return $this;
 	}
@@ -26,21 +26,18 @@ class SearchFactory{
 	}
 
 
-	public function do($name,$source = null){
-		// Log::debug($this->implementations);
+	public function do($media,$dest = null){
 		if(empty($this->implementations)){
-			throw new \Exception('No implementations for search');
+			throw new \Exception('No implementations for post');
 		}
 		// Log::debug("index search $index");
 		$i = $this->implementations;
-		if(is_null($source)){
-			return $i->random()->do($name);
+		if(is_null($dest)){
+			return $i->random()->do($media);
 		}
-		if(!$this->hasImplemented($source)){
-			throw new \Exception("Invalid source name");
+		if(!$this->hasImplemented($dest)){
+			throw new \Exception("Invalid destination name");
 		}
-		return $i->get($source)->do($name);
-		
+		return $i->get($dest)->do($media);
 	}
-	
 }

@@ -35,4 +35,16 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'twitter' => [
+        'oauth_access_token' => env('TWITTER_ACCESS_TOKEN',null),
+        'oauth_access_token_secret' =>  env('TWITTER_ACCESS_TOKEN_SECRET',null),
+        'consumer_key' =>  env('TWITTER_CONSUMER_KEY',null),
+        'consumer_secret' =>  env('TWITTER_CONSUMER_KEY_SECRET',null)
+    ],
+
+    'google' => [
+        'key'=>env('GOOGLE_CS_API_KEY',null),
+        'cx'=>env('GOOGLE_CX',null)
+    ],
+
 ];
