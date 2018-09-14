@@ -17,7 +17,7 @@ class SearchServiceProvider extends ServiceProvider
     {
         $this->app->make(SearchFactory::class)
             ->register(new SearchTwitter(config('services.twitter')))
-            ->register(new SearchGoogle('services.google'));
+            ->register(new SearchGoogle(config('services.google')));
     }
 
     /**

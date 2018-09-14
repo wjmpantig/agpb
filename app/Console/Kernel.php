@@ -25,8 +25,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('media:post --dest=twitter')
+                ->hourly();
+        $schedule->command('media:post --dest=facebook')
+                ->hourly();
     }
 
     /**

@@ -40,12 +40,17 @@ class PostTwitter implements PostInterface{
 		    ->buildOauth(self::$UPDATE_URL, self::$REQUEST_METHOD)
 		    ->performRequest();
 		$result = json_decode($result,true);
+		$url = $result['entities']['media'][0]['url'];
+        Log::debug('tweet posted: '.$url);
 
 	    if(isset($result['error'])){
 			Log::error('unable to post tweet',$result);
 			return null;
 		}
-		$result['post_type'] = self::$NAME;
-		return $result;
+		$final_result = [
+			'type' => self::$NAME,
+			'url'=>$url
+		];
+		return $final_result;
 	}
 }

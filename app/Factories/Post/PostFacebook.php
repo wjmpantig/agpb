@@ -17,9 +17,35 @@ class PostFacebook implements PostInterface{
 
 	public function do($media){
 		$page_id = $this->page_id;
+		$graph_ver = "v3.1";
+		// return $this->access_token;
+		// $file = $this->fetchFile($media->filename);
+		// Log::debug('download file: ' . $media->filename . ' to ' . $file);
 		
-		$token = $this->fb->post("/$page_id/feed?message=testmessage");
-		return $token;
+		$query = $media->query;
+		parse_str($query,$query);
+		$params = [
+			'url'=>$media->filename,
+			'published'=>true
+		];
+		$response = $this->fb->post("/$page_id/photos?",$params,$this->access_token,null,$graph_ver);
+		$object =  $response->getGraphObject()->asArray();
+		$url = "https://www.facebook.com/".$object['post_id'];
+		Log::debug('posted in facebook: ' . $url);
+		$final_result = [
+			'type' => self::$NAME,
+			'url'=>$url
+		];
+
+		return $final_result;
 
 	}
+
+	private function fetchFile($url){
+    	$info = pathinfo($url);
+		$contents = file_get_contents($url);
+		$file = tempnam(sys_get_temp_dir(), 'agpb_');
+		file_put_contents($file, $contents);
+		return $file;
+    }
 }

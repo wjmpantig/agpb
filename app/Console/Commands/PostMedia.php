@@ -7,6 +7,7 @@ use App\Factories\Post\PostFactory;
 use App\Media;
 use App\Post;
 use Log;
+use Artisan;
 class PostMedia extends Command
 {
     /**
@@ -46,30 +47,30 @@ class PostMedia extends Command
         $id = $opts['id'];
         $dest = $opts['dest'];
         $media = null;
-        $result = $this->postFactory->do($media,$dest);
-        $this->info($result);
-        return;
+        
+        
         if(empty($id)){
-            $media = $this->call('media:generate');
-            $this->info($media);
-            $media = Media::whereIn('id',$media)->inRandomOrder()->first();
+            
+            do{
+            Artisan::call('media:generate');
+            $id = str_replace('\r\n', '', Artisan::output());
+            $media = Media::where('id',$id)->firstOrFail();
+            if($media->type == 'video'){
+                $id = '';
+            }
+            }while(empty($id));
         }else{
             $media = Media::where('type','photo')->where('id',$id)->firstOrFail();
         }
-        $this->info("uploading media $media->id ...");
-        $result = $this->postFactory->do($media);
+        Log::info("uploading media $media->id ...");
+        $result = $this->postFactory->do($media,$dest);
         if(is_null($result)){
-            $this->error('posting failed');
+            Log::error('posting failed');
         }
-        $post = new Post();
-        $post->type = $result['post_type'];
-        if($post->type == 'twitter'){
-            $url= $result['entities']['media'][0]['url'];
-            Log::debug('tweet posted: '.$url);
-            $post->url = $url;
-        }
-
+        $post = new Post($result);
+        $post->media_id = $media->id;
         $post->save();
-        $this->info('post successful: ' . $post->id);
+        Log::info('post successful: ' . $post->id);
+
     }
 }
