@@ -63,14 +63,8 @@ class PostMedia extends Command
             $media = Media::where('type','photo')->where('id',$id)->firstOrFail();
         }
         Log::info("uploading media $media->id ...");
-        $result = $this->postFactory->do($media,$dest);
-        if(is_null($result)){
-            Log::error('posting failed');
-        }
-        $post = new Post($result);
-        $post->media_id = $media->id;
-        $post->save();
-        Log::info('post successful: ' . $post->id);
+        $post = $this->postFactory->make($media,$dest);
+
 
     }
 }

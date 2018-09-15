@@ -13,7 +13,7 @@ class PostTwitter implements PostInterface{
 		$this->twitter = new \TwitterAPIExchange($this->keys);
 	}
 
-	public function do($media){
+	public function make($media,$caption){
 		$twitter = $this->twitter;
 		$data = file_get_contents($media->filename);
         $base64 = base64_encode($data);
@@ -49,8 +49,13 @@ class PostTwitter implements PostInterface{
 		}
 		$final_result = [
 			'type' => self::$NAME,
-			'url'=>$url
+			'url'=>$url,
+			'post_id'=>$result['id_str']
 		];
 		return $final_result;
+	}
+
+	public function reply($post,$reply){
+
 	}
 }

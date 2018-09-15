@@ -10,7 +10,7 @@ class SearchTwitter implements SearchInterface{
 	public static $NAME = 'twitter';
 	private static $URL = "https://api.twitter.com/1.1/search/tweets.json";
 	private static $REQUEST_METHOD = "GET";
-	private static $QUERY_FILTERS = "filter:safe filter:media";
+	public static $QUERY_FILTERS = "filter:safe filter:media";
 	private static $MAX_RESULTS = 100;
 	private $twitter;
 	function __construct($keys){
