@@ -1,36 +1,54 @@
 <?php
 namespace App\Factories\Post;
-use SammyK\LaravelFacebookSdk\LaravelFacebookSdk;
+use GuzzleHttp\Client;
+
 use Log;
 use App;
 class PostFacebook implements PostInterface{
 	public static $NAME = 'facebook';
-	private $fb;
+	
 	private $page_id;
 	private $access_token;
+	private static $BASE_URL = "https://graph.facebook.com";
+	private static $TIMEOUT = 20.0;
+	private $client;
+
 	function __construct(){
-		$this->fb = App::make(LaravelFacebookSdk::class);
+		
 		$this->page_id = env('FACEBOOK_PAGE_ID',null);
 		$this->access_token = env('FACEBOOK_PAGE_ACCESS_TOKEN',null);
-		$this->fb->setDefaultAccessToken($this->access_token);
+		$this->client = new Client([
+			'base_uri'=>self::$BASE_URL,
+			'timeout'=>self::$TIMEOUT
+		]);
 	}
 
 	public function do($media){
 		$page_id = $this->page_id;
-		$graph_ver = "v3.1";
-		// return $this->access_token;
-		// $file = $this->fetchFile($media->filename);
-		// Log::debug('download file: ' . $media->filename . ' to ' . $file);
+		
+		
 		
 		$query = $media->query;
 		parse_str($query,$query);
 		$params = [
 			'url'=>$media->filename,
-			'published'=>true
+			'published'=>true,
+			'access_token'=>$this->access_token
 		];
-		$response = $this->fb->post("/$page_id/photos?",$params,$this->access_token,null,$graph_ver);
-		$object =  $response->getGraphObject()->asArray();
-		$url = "https://www.facebook.com/".$object['post_id'];
+		$header = [
+			'Authorization'=>'Bearer ' . $this->access_token,
+			'Content-type'=>'application/json',
+			'Accept'=>'applicaiton/json'
+		];
+		$response = $this->client->post("/$page_id/photos",[
+				'header'=>$header,
+				'form_params'=>$params
+			]);
+		$result = json_decode($response->getBody(),true);
+		// Log::debug($response->getStatusCode());
+		// Log::debug($response->getBody());
+		
+		$url = "https://www.facebook.com/".$result['post_id'];
 		Log::debug('posted in facebook: ' . $url);
 		$final_result = [
 			'type' => self::$NAME,
@@ -41,11 +59,4 @@ class PostFacebook implements PostInterface{
 
 	}
 
-	private function fetchFile($url){
-    	$info = pathinfo($url);
-		$contents = file_get_contents($url);
-		$file = tempnam(sys_get_temp_dir(), 'agpb_');
-		file_put_contents($file, $contents);
-		return $file;
-    }
 }

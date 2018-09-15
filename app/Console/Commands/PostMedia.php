@@ -52,12 +52,12 @@ class PostMedia extends Command
         if(empty($id)){
             
             do{
-            Artisan::call('media:generate');
-            $id = str_replace('\r\n', '', Artisan::output());
-            $media = Media::where('id',$id)->firstOrFail();
-            if($media->type == 'video'){
-                $id = '';
-            }
+                Artisan::call('media:generate');
+                $id = str_replace('\r\n', '', Artisan::output());
+                $media = Media::where('id',$id)->firstOrFail();
+                if($media->type == 'video'){
+                    $id = '';
+                }
             }while(empty($id));
         }else{
             $media = Media::where('type','photo')->where('id',$id)->firstOrFail();
