@@ -69,7 +69,7 @@ class SearchTwitter implements SearchInterface{
 
 			$index = $faker->numberBetween(0,$resultCount-1);
 			$status = $results->statuses[$index]; //pick random status
-			if($result->user->screen_name=="asiangirlspostbot"){
+			if($status->user->screen_name=="asiangirlspostbot"){
 				Log::info('search result from own post');
 				return null;
 			}
@@ -82,11 +82,11 @@ class SearchTwitter implements SearchInterface{
 			// dd($result);
 			$resultMedia = $status->extended_entities->media;
 			$index = $faker->numberBetween(0,count($resultMedia)-1);
-			$resultMedia = $result->extended_entities->media[$index];
+			$resultMedia = $status->extended_entities->media[$index];
 			$finalResult = [
 				'type' => $resultMedia->type,
 				'url'=>$resultMedia->url,
-				'description'=>mb_strimwidth($result->text,0,200,'...'),
+				'description'=>mb_strimwidth($status->text,0,200,'...'),
 				'filename'=>$resultMedia->media_url,
 				'source'=>self::$NAME
 			];
