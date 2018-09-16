@@ -50,7 +50,7 @@ class GenerateMedia extends Command
         $profile = $opts['profile'];
         $source = $opts['source'];
         
-        
+        $source = 'twitter';
         if(empty($profile)){
             $profile = Profile::with('altNames')->inRandomOrder()->first();
         }else{
