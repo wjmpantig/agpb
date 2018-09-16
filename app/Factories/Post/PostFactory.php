@@ -73,7 +73,7 @@ class PostFactory{
 
 	private function build_reply($media){
 		$reply = "Source: $media->url 
-			Search type: $media->type";
+			Search type: $media->source";
 		return $reply;
 	}
 }
