@@ -52,7 +52,7 @@ class PostMedia extends Command
         if(empty($id)){
             
             do{
-                Artisan::call('media:generate',['--source'=>'twitter']);
+                Artisan::call('media:generate');
                 $id = str_replace('\r\n', '', Artisan::output());
                 $media = Media::with('profile.altNames')
                     ->where('id',$id)
@@ -64,6 +64,9 @@ class PostMedia extends Command
             ->where('type','photo')
             ->where('id',$id)
             ->first();
+        if(!$media){
+            return;
+        }
         Log::info("uploading media $media->id ...");
         $post = $this->postFactory->make($media,$dest);
 

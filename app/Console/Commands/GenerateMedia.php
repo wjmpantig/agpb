@@ -15,7 +15,7 @@ class GenerateMedia extends Command
      *
      * @var string
      */
-    protected $signature = 'media:generate {--profile=} {--source=} {--count=1}';
+    protected $signature = 'media:generate {--profile=} {--source=}}';
 
     /**
      * The console command description.
@@ -49,7 +49,7 @@ class GenerateMedia extends Command
         $opts = $this->options();
         $profile = $opts['profile'];
         $source = $opts['source'];
-        $count = $opts['count'];
+        
         
         if(empty($profile)){
             $profile = Profile::with('altNames')->inRandomOrder()->first();
@@ -67,53 +67,29 @@ class GenerateMedia extends Command
         }
         $source = empty($source) ? null : $source;
 
-        if(!is_numeric($count)){
-            Log::error('count option must be a positive integer');
-            return 0;
-        }
-        $count = intval($count);
-        if($count < 1){
-            Log::error('count option must be a positive integer');
-            return 0;
-        }
+      
         // Log::info("Profile: " . $profile->name);
         $q = $profile->name;
         if($profile->altNames->count() > 0 && $faker->boolean){
             $altname = $profile->altNames->random();
             $q = $altname->name;
         }
-        // $bar = $this->output->createProgressBar($count);
+        
         $ids = [];
-        $tries = 0;
-        for($i=0;$i<$count;$i++){
-            // $this->info($i);
-            if($tries==3){
-                Log::info('maximum tries reached');
-                break;
-            }
-            $result = $this->searchFactory->do($q,$source);
-            if(!$result){
-                Log::info('no result, repeat search');
-                $i--;
-                $tries++;
-                continue;
-            }
-            $exists = Media::where('filename',$result['filename'])->first();
-            if($exists){
-                Log::info('image already exists, repeat search');
-                $i--;
-                $tries++;
-                continue;
-            }
-
-            // dd($result);
-            $media = new Media($result);
-            $media->profile_id = $profile->id;
-            $media->save();
-            $ids[] = $media->id;
-            // $bar->advance();
+                    
+        $result = $this->searchFactory->do($q,$source);
+        if(!$result){
+            Log::info('no results found..');
+            return;
         }
-        // $bar->finish();
+        $exists = Media::where('filename',$result['filename'])->first();
+    
+        
+        $media = new Media($result);
+        $media->profile_id = $profile->id;
+        $media->save();
+        $ids[] = $media->id;
+        
         $this->info(implode(',',$ids));
 
     }
