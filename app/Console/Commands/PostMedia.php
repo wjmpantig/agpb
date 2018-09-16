@@ -56,17 +56,17 @@ class PostMedia extends Command
                 $id = str_replace('\r\n', '', Artisan::output());
                 $media = Media::with('profile.altNames')
                     ->where('id',$id)
-                    ->where('type','video')
+                    ->where('type','photo')
                     ->first();
             }while(empty($id) || is_null($media));
+        }else{
+            $media = Media::with('profile.altNames')
+                ->where('type','photo')
+                ->where('id',$id)
+                ->firstOrFail();
         }
-        $media = Media::with('profile.altNames')
-            ->where('type','photo')
-            ->where('id',$id)
-            ->first();
-        if(!$media){
-            return;
-        }
+        
+        
         Log::info("uploading media $media->id ...");
         $post = $this->postFactory->make($media,$dest);
 
