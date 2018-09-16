@@ -12,11 +12,13 @@ class SearchTwitter implements SearchInterface{
 	private static $REQUEST_METHOD = "GET";
 	public static $QUERY_FILTERS = "filter:safe filter:media";
 	private static $MAX_RESULTS = 100;
+	private static $RESULT_TYPES = null;
 	private $twitter;
 	function __construct($keys){
 		$this->keys = $keys;
 		$this->twitter = new \TwitterAPIExchange($this->keys);
 		$this->faker = Factory::create();
+		self::$RESULT_TYPES = ['mixed','popular','recent'];
 	}
 	public function do($name){
 		$faker = $this->faker;
@@ -25,13 +27,12 @@ class SearchTwitter implements SearchInterface{
 		$twitter = $this->twitter;
 		$data = array(
 			'q'=>$name. " ".self::$QUERY_FILTERS,
-			// 'q'=>$name,
 			'count'=>self::$MAX_RESULTS,
 			'include_entities'=>true
 		);
 		
 		
-		$data['result_type']= $this->faker->randomElement(['mixed','popular','recent']);
+		$data['result_type']= $this->faker->randomElement(self::$RESULT_TYPES);
 		if($faker->boolean){
 			$date = Carbon::now();
 			$date->subDays(1,7);
@@ -66,16 +67,22 @@ class SearchTwitter implements SearchInterface{
 		}
 		do{
 
-			$resultIndex = $faker->numberBetween(0,$resultCount-1);
-			$result = $results->statuses[$resultIndex]; //pick random status
-			if(!isset($result->entities->media)){
+			$index = $faker->numberBetween(0,$resultCount-1);
+			$status = $results->statuses[$index]; //pick random status
+			if($result->user->screen_name=="asiangirlspostbot"){
+				Log::info('search result from own post');
+				return null;
+			}
+			if(!isset($status->entities->media)){
 				if($resultCount == 1){
 					return null; //no media in results, return null
 				}
 				continue;
 			}
 			// dd($result);
-			$resultMedia = $result->extended_entities->media[$faker->numberBetween(0,count($result->extended_entities->media)-1)];
+			$resultMedia = $status->extended_entities->media;
+			$index = $faker->numberBetween(0,count($resultMedia)-1);
+			$resultMedia = $result->extended_entities->media[$index];
 			$finalResult = [
 				'type' => $resultMedia->type,
 				'url'=>$resultMedia->url,

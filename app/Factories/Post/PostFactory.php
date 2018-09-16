@@ -31,7 +31,7 @@ class PostFactory{
 
 	public function make($media,$dest = null){
 		if(empty($this->implementations)){
-			throw new \Exception('No implementations for post');
+			throw new \Exception('No implementations for post with name: ' . $dest);
 		}
 		// Log::debug("index search $index");
 		$i = $this->implementations;

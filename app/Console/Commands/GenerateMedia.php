@@ -50,22 +50,18 @@ class GenerateMedia extends Command
         $profile = $opts['profile'];
         $source = $opts['source'];
         
-        $source = 'twitter';
+        
         if(empty($profile)){
-            $profile = Profile::with('altNames')->inRandomOrder()->first();
+            $profile = Profile::with('altNames')->inRandomOrder()->firstOrFail();
         }else{
-            $profile = Profile::with('altNames')->where('id',$profile)->orWhere('slug',$profile)->first();
-        }
-        if(!$profile){
-            Log::error('No profiles found');
-            return 0;
+            $profile = Profile::with('altNames')->where('id',$profile)->orWhere('slug',$profile)->firstOrFail();
         }
         
         if(!empty($source) && !$this->searchFactory->hasImplemented($source)){
             Log::error('Source not found');
             return 0;
         }
-        $source = empty($source) ? null : $source;
+        $source = empty($source) ? env('SEARCH_ENGINE',null) : $source;
 
       
         // Log::info("Profile: " . $profile->name);
