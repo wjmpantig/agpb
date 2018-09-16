@@ -76,7 +76,7 @@ class GenerateMedia extends Command
             Log::error('count option must be a positive integer');
             return 0;
         }
-        Log::info("Profile: " . $profile->name);
+        // Log::info("Profile: " . $profile->name);
         $q = $profile->name;
         if($profile->altNames->count() > 0 && $faker->boolean){
             $altname = $profile->altNames->random();

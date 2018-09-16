@@ -52,16 +52,18 @@ class PostMedia extends Command
         if(empty($id)){
             
             do{
-                Artisan::call('media:generate');
+                Artisan::call('media:generate',['--source'=>'twitter']);
                 $id = str_replace('\r\n', '', Artisan::output());
-                $media = Media::where('id',$id)->firstOrFail();
-                if($media->type == 'video'){
-                    $id = '';
-                }
-            }while(empty($id));
-        }else{
-            $media = Media::where('type','photo')->where('id',$id)->firstOrFail();
+                $media = Media::with('profile.altNames')
+                    ->where('id',$id)
+                    ->where('type','video')
+                    ->first();
+            }while(empty($id) || is_null($media));
         }
+        $media = Media::with('profile.altNames')
+            ->where('type','photo')
+            ->where('id',$id)
+            ->first();
         Log::info("uploading media $media->id ...");
         $post = $this->postFactory->make($media,$dest);
 

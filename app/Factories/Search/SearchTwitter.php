@@ -42,7 +42,7 @@ class SearchTwitter implements SearchInterface{
 		$getField = http_build_query($data,'','&',PHP_QUERY_RFC1738);
 		$getField = urldecode($getField);
 		// Log::debug("searching ". self::$NAME . ' with params: ', $data);
-		Log::debug("searching ". self::$NAME . ' with params: '. $getField);
+		Log::debug("searching ". self::$NAME . ' with params: ', $data);
 		// Log::debug("searching ". $getField);
 		$results = json_decode($twitter->setGetfield("?".$getField)
 			->buildOauth(self::$URL,self::$REQUEST_METHOD)

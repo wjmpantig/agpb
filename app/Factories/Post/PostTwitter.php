@@ -30,10 +30,9 @@ class PostTwitter implements PostInterface{
 			return null;
 		}
 		Log::debug("uploaded media",$upload);
-		$query = $media->query;
-		parse_str($query,$query);
+		
 		$postField = [
-			'status'=>$query['q'],
+			'status'=>$caption,
 			'media_ids'=>$upload['media_id_string']
 		];
 		$result = $twitter->setPostfields($postField)

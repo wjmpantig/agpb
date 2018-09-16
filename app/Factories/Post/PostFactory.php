@@ -65,8 +65,20 @@ class PostFactory{
 		$query = $media->query;
 		parse_str($query,$query);
 		$caption = $query['q'];
-		if($media->type=='twitter'){
-
+		if($media->source=='twitter'){
+			$profile = $media->profile;
+			
+			$name = collect([$profile->name])
+				->merge($profile->altNames->pluck('name'))
+				->filter(function($val) use ($caption){
+					return is_int(strpos($caption, $val));
+				})
+				->first();
+			
+			if($name){
+				$caption = $name;
+			}
+			
 		}
 		return $caption;
 	}
