@@ -52,7 +52,7 @@ class PostFactory{
         $post = new Post($result);
         $post->media_id = $media->id;
         $post->save();
-        Log::info('post successful: ' . $post->id);
+        // Log::info('post successful: ' . $post->id);
         if(!is_null($post->post_id)){
 			$reply = $this->build_reply($media);
 	        $i->reply($post,$reply);

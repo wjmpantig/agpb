@@ -29,7 +29,7 @@ class PostTwitter implements PostInterface{
 			Log::error('unable to upload media',$upload);
 			return null;
 		}
-		Log::debug("uploaded media",$upload);
+		// Log::debug("uploaded media",$upload);
 		
 		$postField = [
 			'status'=>$caption,
