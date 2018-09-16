@@ -63,7 +63,7 @@ class PostFacebook implements PostInterface{
 	}
 
 	public function reply($post,$reply){
-				
+		$post_id=$post->post_id;		
 		$params = [
 			'message'=>$reply,
 			'access_token'=>$this->access_token
