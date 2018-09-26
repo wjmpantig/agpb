@@ -3,22 +3,19 @@
 @section('content')
 <div class="container">
     <div class="columns is-mobile is-multiline">
-        @foreach($profiles as $profile)
+        @foreach($profile->media as $m)
         <div class="column is-half-mobile is-one-third-tablet is-one-fifth-desktop">
-            <a href="{{route('profile',['slug'=>$profile->slug])}}">
+            <a href="{{route('media',['id'=>$m->id])}}">
+                
                 <div class="card">
                     <div class="card-image">
                         <figure class="image">
-                            @if($profile->thumbnail)
-                            <img src="{{$profile->thumbnail}}" alt="{{$profile->name}}">
-                            @else
-                            <img src="/img/placeholder.png" alt="{{$profile->name}}">
-                            @endif
+                            <img src="{{$m->filename}}" alt="{{$m->description}}">                        
                         </figure>
                     </div>
 
-                    <div class="card-content has-text-centered">
-                        {{$profile->name}}
+                    <div class="card-content is-size-7">
+                        {{$m->id}} : {{$m->description}}
                     </div>
                 </div>
             </a>
