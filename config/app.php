@@ -161,7 +161,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\SearchServiceProvider::class,
         App\Providers\PostServiceProvider::class,
-        
+        Madcoda\Youtube\YoutubeServiceProviderLaravel5::class,
 
     ],
 
@@ -211,7 +211,7 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        
+        'Youtube'   => Madcoda\Youtube\Facades\Youtube::class,
     ],
 
 ];

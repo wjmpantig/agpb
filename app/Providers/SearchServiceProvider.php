@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use App\Factories\Search\SearchFactory;
 use App\Factories\Search\SearchTwitter;
 use App\Factories\Search\SearchGoogle;
+use App\Factories\Search\SearchYoutube;
 class SearchServiceProvider extends ServiceProvider
 {
     /**
@@ -17,7 +18,8 @@ class SearchServiceProvider extends ServiceProvider
     {
         $this->app->make(SearchFactory::class)
             ->register(new SearchTwitter(config('services.twitter')))
-            ->register(new SearchGoogle(config('services.google')));
+            ->register(new SearchGoogle(config('services.google')))
+            ->register(new SearchYoutube());
     }
 
     /**

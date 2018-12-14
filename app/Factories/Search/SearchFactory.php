@@ -33,7 +33,7 @@ class SearchFactory{
 		}
 		// Log::debug("index search $index");
 		$i = $this->implementations;
-		if(is_null($source)){
+		if(is_null($source) || empty($source)){
 			return $i->random()->do($name);
 		}
 		if(!$this->hasImplemented($source)){

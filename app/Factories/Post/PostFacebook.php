@@ -1,6 +1,8 @@
 <?php
 namespace App\Factories\Post;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Exception\RequestException;
 
 use Log;
 use App;
@@ -31,23 +33,42 @@ class PostFacebook implements PostInterface{
 
 	public function make($media,$caption){
 		$page_id = $this->page_id;
-		
-		
-		$params = [
-			'url'=>$media->filename,
-			'published'=>true,
-			'access_token'=>$this->access_token,
-			'caption'=> $caption
-		];
-		
-		$response = $this->client->post("/$page_id/photos",[
-				'header'=>$this->header,
-				'form_params'=>$params
-			]);
-		$result = json_decode($response->getBody(),true);
-		// Log::debug($response->getStatusCode());
-		// Log::debug($response->getBody());
-		$post_id = $result['post_id'];
+		$result = null;
+		$post_id = null;
+		try{
+			if($media->source == 'youtube'){
+				$params = [
+					'message'=>$caption,
+					'link'=>$media->url,
+					'published'=>true,
+					'access_token'=>$this->access_token
+				];
+				$response = $this->client->post("/$page_id/feed",[
+						'header'=>$this->header,
+						'form_params'=>$params
+					]);
+				// $post_id = $result['id'];
+			}else{
+				$params = [
+					'url'=>$media->filename,
+					'published'=>true,
+					'access_token'=>$this->access_token,
+					'caption'=> $caption
+				];
+				
+				$response = $this->client->post("/$page_id/photos",[
+						'header'=>$this->header,
+						'form_params'=>$params
+					]);
+			}
+			$result = json_decode($response->getBody(),true);
+			
+		}catch(RequestException $e){
+			Log::error("error posting to facebook " . Psr7\str($e->getResponse()));
+			return null;
+		}
+		$post_id = isset($result['post_id']) ? $result['post_id'] : $result['id'];
+		// Log::debug($result);
 		$url = "https://www.facebook.com/".$post_id;
 		Log::debug('posted in facebook: ' . $url);
 		$final_result = [

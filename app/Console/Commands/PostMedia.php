@@ -61,7 +61,7 @@ class PostMedia extends Command
             }while(empty($id) || is_null($media));
         }else{
             $media = Media::with('profile.altNames')
-                ->where('type','photo')
+                // ->where('type','photo')
                 ->where('id',$id)
                 ->firstOrFail();
         }
