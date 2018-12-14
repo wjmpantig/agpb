@@ -56,7 +56,7 @@ class PostMedia extends Command
                 $id = str_replace('\r\n', '', Artisan::output());
                 $media = Media::with('profile.altNames')
                     ->where('id',$id)
-                    ->where('type','photo')
+                    // ->where('type','photo')
                     ->first();
             }while(empty($id) || is_null($media));
         }else{
